@@ -1,49 +1,52 @@
-const CREATE_FIELD = 'CREATE_FIELD';
+const SET_FIELD = 'SET_FIELD';
+const SET_FOOD = 'SET_FOOD';
+const TOOGLE_IS_FOOD = 'TOOGLE_IS_FOOD';
+
 
 let initialState = {
     rows: 10,
     cols: 10,
-    grid: []
+    field: [],
+    food: {}
 };
-
-const grid = initialState.grid;
-
-for (let row = 0; row < initialState.rows; row++) {
-    for (let col = 0; col < initialState.cols; col++) {
-        grid.push({
-            row,
-            col,
-        })
-    }
-}
-
 
 
 const gameReducer = (state = initialState, action) => {
 
     switch (action.type) {
-        // case CREATE_FIELD:
-        //     const grid = [];
-
-        //     for (let row = 0; row < state.rows; row++) {
-        //         for (let col = 0; col < state.cols; col++) {
-        //             grid.push({
-        //                 row,
-        //                 col,
-        //             })
-        //         }
-        //     }
-        //     return {
-        //         ...state,
-        //         grid: grid
-        //     }
+        case SET_FIELD: 
+            return { ...state, field: action.field }
+        case SET_FOOD:
+            return { ...state, food: action.foodCoordinates }
+        case TOOGLE_IS_FOOD:
+            return { ...state,
+                 field: state.field.map(fieldItem => {
+                    if (fieldItem.row === state.food.row &&
+                        fieldItem.col === state.food.col) {
+                            return {
+                                ...fieldItem,
+                                isFood: true
+                            }
+                        }
+                        return fieldItem;
+            }) }     
         default:
             return state;
     }
 }
 
-export const createFieldAC = () => ({
-    type: CREATE_FIELD,
+export const setFieldAC = (field) => ({
+    type: SET_FIELD,
+    field: field
+})
+
+export const setFoodAC = (foodCoordinates) => ({
+    type: SET_FOOD,
+    foodCoordinates: foodCoordinates
+})
+
+export const toogleIsFoodAC = () => ({
+    type: TOOGLE_IS_FOOD
 })
 
 
