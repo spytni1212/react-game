@@ -1,7 +1,7 @@
 import React from 'react';
 import s from './Game.module.css';
 import { connect } from 'react-redux';
-import { setFieldAC, setFoodAC, toogleIsFoodAC } from '../../redux/game-reducer'
+import { setFieldAC, setFoodAC, toogleIsFoodAC, toogleIsHeadAC, setHeadAC } from '../../redux/game-reducer'
 //import Game from './Game';
 
 class GameContainer extends React.Component {
@@ -15,21 +15,34 @@ class GameContainer extends React.Component {
                 field.push ({
                     row,
                     col,
-                    isFood: false
+                    isFood: false,
+                    isHead: false
                 })
             }
         }
         this.props.setField(field)
-        console.log('1')
+        console.log('constructor')
+        //this.handleKeyPress = this.handleKeyPress.bind(this)
     }
 
     componentDidMount() {
+        document.body.addEventListener('keydown', this.handleKeyPress);
+
         const food = this.getRandomCoordinates();
+        const head = this.getCenterOfGrid();
         this.props.setFood(food);
+        this.props.setHead(head);
         this.props.toogleIsFood();
+        this.props.toogleIsHead();
         
-        console.log('2')
+        console.log('didMount')
     }
+
+    componentWillUnmount() {
+        document.body.removeEventListener('keydown', this.handleKeyPress);
+    }
+
+    
 
     getRandomCoordinates() {
         return {
@@ -38,10 +51,17 @@ class GameContainer extends React.Component {
         }
     }
             
+    getCenterOfGrid() {
+        return {
+          row: Math.floor((this.props.gamePage.rows - 1) / 2),
+          col: Math.floor((this.props.gamePage.cols - 1) / 2),
+        }
+      }
+
     render() {
-        console.log('3')
+        console.log('render')
         const fieldItems = this.props.gamePage.field.map(fieldItem => {
-            return <div className = {fieldItem.isFood ? s.isFood : s.fieldItem} key = {fieldItem.row + '-' + fieldItem.col}></div>
+            return <div className = {fieldItem.isHead ? s.isHead : fieldItem.isFood ? s.isFood : s.fieldItem } key = {fieldItem.row + '-' + fieldItem.col}></div>
         })
         return (
         <div className = {s.snakeContainer}>
@@ -68,8 +88,14 @@ let mapDispatchToProps = (dispatch) => {
         setFood: (foodCoordinates) => {
             dispatch(setFoodAC(foodCoordinates));
         },
+        setHead: (headCoordinates) => {
+            dispatch(setHeadAC(headCoordinates));
+        },
         toogleIsFood: () => {
             dispatch(toogleIsFoodAC());
+        },
+        toogleIsHead: () => {
+            dispatch(toogleIsHeadAC());
         }
     }
 }
