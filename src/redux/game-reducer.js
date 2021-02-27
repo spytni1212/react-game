@@ -3,6 +3,7 @@ const SET_FOOD = 'SET_FOOD';
 const SET_HEAD = 'SET_HEAD';
 const TOOGLE_IS_FOOD = 'TOOGLE_IS_FOOD';
 const TOOGLE_IS_HEAD = 'TOOGLE_IS_HEAD';
+const SET_DIRECTION = 'SET_DIRECTION';
 
 
 let initialState = {
@@ -50,6 +51,10 @@ const gameReducer = (state = initialState, action) => {
                     }
                     return fieldItem;
         }) } 
+        case SET_DIRECTION:
+            return {
+                ...state, currentDirection: action.direction
+            }
         default:
             return state;
     }
@@ -76,6 +81,11 @@ export const toogleIsFoodAC = () => ({
 
 export const toogleIsHeadAC = () => ({
     type: TOOGLE_IS_HEAD
+})
+
+export const setDirectionAC = (direction) => ({
+    type: SET_DIRECTION,
+    direction: direction
 })
 
 

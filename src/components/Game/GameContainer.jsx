@@ -1,7 +1,7 @@
 import React from 'react';
 import s from './Game.module.css';
 import { connect } from 'react-redux';
-import { setFieldAC, setFoodAC, toogleIsFoodAC, toogleIsHeadAC, setHeadAC } from '../../redux/game-reducer'
+import { setFieldAC, setFoodAC, toogleIsFoodAC, toogleIsHeadAC, setHeadAC, setDirectionAC } from '../../redux/game-reducer'
 //import Game from './Game';
 
 class GameContainer extends React.Component {
@@ -22,8 +22,26 @@ class GameContainer extends React.Component {
         }
         this.props.setField(field)
         console.log('constructor')
-        //this.handleKeyPress = this.handleKeyPress.bind(this)
+        this.handleKeyPress = this.handleKeyPress.bind(this)
     }
+
+    handleKeyPress(e) {
+      switch (e.keyCode) {
+          case 37:
+            this.props.setDirection('left');
+            break;
+      case 38:
+            this.props.setDirection('up');
+            break;
+      case 39:
+          default:
+            this.props.setDirection('right');
+            break;
+      case 40:
+            this.props.setDirection('down');
+            break;
+        }
+      }
 
     componentDidMount() {
         document.body.addEventListener('keydown', this.handleKeyPress);
@@ -96,6 +114,9 @@ let mapDispatchToProps = (dispatch) => {
         },
         toogleIsHead: () => {
             dispatch(toogleIsHeadAC());
+        },
+        setDirection: (direction) => {
+            dispatch(setDirectionAC(direction))
         }
     }
 }
