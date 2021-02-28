@@ -1,8 +1,10 @@
 import React from 'react';
 import s from './Game.module.css';
 import { connect } from 'react-redux';
-import { setFieldAC, setFoodAC, toogleIsFoodAC, toogleIsHeadAC, setHeadAC, setDirectionAC } from '../../redux/game-reducer'
-//import Game from './Game';
+import { setFieldAC, setFoodAC, toogleIsFoodAC, 
+         toogleIsHeadAC, setHeadAC, setDirectionAC,
+         setTailAC, changeHeadCoordinatesAC, toogleIsTailAC } from '../../redux/game-reducer'
+
 
 class GameContainer extends React.Component {
     
@@ -16,12 +18,12 @@ class GameContainer extends React.Component {
                     row,
                     col,
                     isFood: false,
-                    isHead: false
+                    isHead: false,
+                    isTail: false
                 })
             }
         }
         this.props.setField(field)
-        console.log('constructor')
         this.handleKeyPress = this.handleKeyPress.bind(this)
     }
 
@@ -51,16 +53,33 @@ class GameContainer extends React.Component {
         this.props.setFood(food);
         this.props.setHead(head);
         this.props.toogleIsFood();
-        this.props.toogleIsHead();
+        
+        window.fnInterval = setInterval(() => {
+            this.gameTick();
+            console.log('fgh')
+        }, this.props.gamePage.tickTime);
         
         console.log('didMount')
+    }
+    
+    gameTick() {
+        this.props.changeHeadCoordinates();
+        this.props.setTail();
+        this.props.toogleIsHead();
+        this.props.toogleIsTail();
+        
+        if (this.props.gamePage.snake.head.col === this.props.gamePage.food.col &&
+            this.props.gamePage.snake.head.row === this.props.gamePage.food.row) {
+                this.props.setFood(this.getRandomCoordinates())
+                this.props.toogleIsFood();
+            }
+
     }
 
     componentWillUnmount() {
         document.body.removeEventListener('keydown', this.handleKeyPress);
+        clearInterval(window.fnInterval);
     }
-
-    
 
     getRandomCoordinates() {
         return {
@@ -79,7 +98,11 @@ class GameContainer extends React.Component {
     render() {
         console.log('render')
         const fieldItems = this.props.gamePage.field.map(fieldItem => {
-            return <div className = {fieldItem.isHead ? s.isHead : fieldItem.isFood ? s.isFood : s.fieldItem } key = {fieldItem.row + '-' + fieldItem.col}></div>
+            return <div className = {fieldItem.isHead 
+                                     ? s.isHead : fieldItem.isTail 
+                                     ? s.isTail : fieldItem.isFood
+                                     ? s.isFood : s.fieldItem } 
+                                     key = {fieldItem.row + '-' + fieldItem.col}></div>
         })
         return (
         <div className = {s.snakeContainer}>
@@ -109,15 +132,24 @@ let mapDispatchToProps = (dispatch) => {
         setHead: (headCoordinates) => {
             dispatch(setHeadAC(headCoordinates));
         },
+        setTail: () => {
+            dispatch(setTailAC());
+        },
         toogleIsFood: () => {
             dispatch(toogleIsFoodAC());
         },
         toogleIsHead: () => {
             dispatch(toogleIsHeadAC());
         },
+        toogleIsTail: () => {
+            dispatch(toogleIsTailAC());
+        },
         setDirection: (direction) => {
             dispatch(setDirectionAC(direction))
-        }
+        },
+        changeHeadCoordinates: () => {
+            dispatch(changeHeadCoordinatesAC());
+        },
     }
 }
 
