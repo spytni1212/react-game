@@ -27,23 +27,35 @@ class GameContainer extends React.Component {
         this.handleKeyPress = this.handleKeyPress.bind(this)
     }
 
+    // handleKeyPress(e) {
+    //   switch (e.keyCode) {
+    //       case 37:
+    //         this.props.setDirection('left');
+    //         break;
+    //   case 38:
+    //         this.props.setDirection('up');
+    //         break;
+    //   case 39:
+    //       default:
+    //         this.props.setDirection('right');
+    //         break;
+    //   case 40:
+    //         this.props.setDirection('down');
+    //         break;
+    //     }
+    // }
+
     handleKeyPress(e) {
-      switch (e.keyCode) {
-          case 37:
-            this.props.setDirection('left');
-            break;
-      case 38:
-            this.props.setDirection('up');
-            break;
-      case 39:
-          default:
-            this.props.setDirection('right');
-            break;
-      case 40:
-            this.props.setDirection('down');
-            break;
+        if (e.keyCode === 37 && this.props.gamePage.currentDirection !== 'right') {
+            this.props.setDirection('left')
+        } else if (e.keyCode === 38 && this.props.gamePage.currentDirection !== 'down') {
+            this.props.setDirection('up')
+        } else if (e.keyCode === 39 && this.props.gamePage.currentDirection !== 'left') {
+            this.props.setDirection('right')
+        } else if (e.keyCode === 40 && this.props.gamePage.currentDirection !== 'up') {
+            this.props.setDirection('down')
         }
-      }
+    }    
 
     componentDidMount() {
         document.body.addEventListener('keydown', this.handleKeyPress);
@@ -56,24 +68,28 @@ class GameContainer extends React.Component {
         
         window.fnInterval = setInterval(() => {
             this.gameTick();
-            console.log('fgh')
         }, this.props.gamePage.tickTime);
-        
-        console.log('didMount')
     }
     
     gameTick() {
         this.props.changeHeadCoordinates();
-        this.props.setTail();
-        this.props.toogleIsHead();
-        this.props.toogleIsTail();
+        let tailCoordinates = this.props.gamePage.snake.tail
+        
+        tailCoordinates.unshift({
+            col: this.props.gamePage.snake.head.col,
+            row: this.props.gamePage.snake.head.row
+        })
         
         if (this.props.gamePage.snake.head.col === this.props.gamePage.food.col &&
             this.props.gamePage.snake.head.row === this.props.gamePage.food.row) {
                 this.props.setFood(this.getRandomCoordinates())
                 this.props.toogleIsFood();
-            }
-
+        } else {
+            tailCoordinates.pop()
+        }
+        this.props.toogleIsHead();
+        this.props.toogleIsTail();
+        this.props.setTail(tailCoordinates);    
     }
 
     componentWillUnmount() {
@@ -96,7 +112,6 @@ class GameContainer extends React.Component {
       }
 
     render() {
-        console.log('render')
         const fieldItems = this.props.gamePage.field.map(fieldItem => {
             return <div className = {fieldItem.isHead 
                                      ? s.isHead : fieldItem.isTail 
@@ -132,8 +147,8 @@ let mapDispatchToProps = (dispatch) => {
         setHead: (headCoordinates) => {
             dispatch(setHeadAC(headCoordinates));
         },
-        setTail: () => {
-            dispatch(setTailAC());
+        setTail: (tailCoordinates) => {
+            dispatch(setTailAC(tailCoordinates));
         },
         toogleIsFood: () => {
             dispatch(toogleIsFoodAC());

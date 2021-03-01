@@ -34,3 +34,10 @@
     height: 50px;
     background-color: black;
 }
+
+.isTail {
+    outline: 1px solid grey;
+    width: 50px;
+    height: 50px;
+    background-color: yellow;
+}

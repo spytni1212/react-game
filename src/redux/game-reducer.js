@@ -33,7 +33,7 @@ const gameReducer = (state = initialState, action) => {
         case SET_HEAD:
         return { ...state, snake: {...state.snake, head: action.headCoordinates}}
         case SET_TAIL:
-        return { ...state, snake: {...state.snake, tail: [{row: state.snake.head.row, col: state.snake.head.col}]}}
+        return { ...state, snake: {...state.snake, tail: action.tailCoordinates}}
         case TOOGLE_IS_FOOD:
             return { ...state,
                  field: state.field.map(fieldItem => {
@@ -69,18 +69,17 @@ const gameReducer = (state = initialState, action) => {
         case TOOGLE_IS_TAIL:
         return { ...state,
                 field: state.field.map(fieldItem => {
-                if (fieldItem.row === state.snake.tail.row &&
-                    fieldItem.col === state.snake.tail.col) {
-                        return {
-                            ...fieldItem,
-                            isTail: true
-                        }
-                    } else {
-                        return {
-                            ...fieldItem,
-                            isTail: false
-                        }
-                    }
+                   if (state.snake.tail.find(tailItem => tailItem.col === fieldItem.col && tailItem.col === fieldItem.col)) {
+                           return {
+                               ...fieldItem,
+                               isTail: true
+                            } 
+                        } else {
+                            return {
+                                ...fieldItem,
+                                isTail: false
+                            }
+                       }
         }) } 
         case SET_DIRECTION:
             return {
@@ -112,7 +111,7 @@ const gameReducer = (state = initialState, action) => {
 export const setFieldAC = (field) => ({type: SET_FIELD, field})
 export const setFoodAC = (foodCoordinates) => ({type: SET_FOOD, foodCoordinates})
 export const setHeadAC = (headCoordinates) => ({type: SET_HEAD, headCoordinates})
-export const setTailAC = () => ({type: SET_TAIL})
+export const setTailAC = (tailCoordinates) => ({type: SET_TAIL, tailCoordinates})
 export const toogleIsFoodAC = () => ({type: TOOGLE_IS_FOOD})
 export const toogleIsHeadAC = () => ({type: TOOGLE_IS_HEAD})
 export const toogleIsTailAC = () => ({type: TOOGLE_IS_TAIL})
