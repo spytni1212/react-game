@@ -2,9 +2,10 @@ import React from 'react';
 import s from './Game.module.css';
 import { connect } from 'react-redux';
 import LosePopup from './LosePopup/LosePopup';
+import Progress from './Progress/Progress';
 import { setFieldAC, setFoodAC, toogleIsFoodAC, 
          toogleIsHeadAC, setHeadAC, setDirectionAC,
-         setTailAC, changeHeadCoordinatesAC, toogleIsTailAC, addScoreAC, gameOverAC } from '../../redux/game-reducer'
+         setTailAC, changeHeadCoordinatesAC, toogleIsTailAC, addScoreAC, gameOverAC, addTimeAC } from '../../redux/game-reducer'
 
 
 class GameContainer extends React.Component {
@@ -52,10 +53,15 @@ class GameContainer extends React.Component {
         window.fnInterval = setInterval(() => {
             this.gameTick();
         }, this.props.gamePage.tickTime);
+        window.time = setInterval(() => {
+            this.timeGame();
+        }, 1000)
     }
     
     gameTick() {
         this.props.changeHeadCoordinates();
+        this.props.toogleIsHead();
+        this.props.toogleIsTail();
         let snake = this.props.gamePage.snake;
         let tailCoordinates = this.props.gamePage.snake.tail;
 
@@ -77,9 +83,6 @@ class GameContainer extends React.Component {
         } else {
             tailCoordinates.pop()
         }
-
-        this.props.toogleIsHead();
-        this.props.toogleIsTail();
         this.props.setTail(tailCoordinates);    
 
         if (snake.head.row < 0 ||
@@ -91,12 +94,14 @@ class GameContainer extends React.Component {
 
         if (this.props.gamePage.die) {
             clearInterval(window.fnInterval);
+            clearInterval(window.time)
         }
     }
 
     componentWillUnmount() {
         document.body.removeEventListener('keydown', this.handleKeyPress);
         clearInterval(window.fnInterval);
+        clearInterval(window.time)
     }
 
     getRandomCoordinates() {
@@ -111,7 +116,11 @@ class GameContainer extends React.Component {
           row: Math.floor((this.props.gamePage.rows - 1) / 2),
           col: Math.floor((this.props.gamePage.cols - 1) / 2),
         }
-      }
+    }
+
+    timeGame() {
+        this.props.addTime();
+    }
 
     render() {
         const fieldItems = this.props.gamePage.field.map(fieldItem => {
@@ -123,9 +132,11 @@ class GameContainer extends React.Component {
         })
         return (
         <div className = {s.gameContainer}>
-            <div>score: {this.props.gamePage.score}</div>
+            { this.props.gamePage.die ? <></> : <Progress score={this.props.gamePage.score} time={this.props.gamePage.time}/>}
+            
             <div>
-            { this.props.gamePage.die ? <LosePopup score={this.props.gamePage.score}/> :<div className = {s.grid}>{fieldItems}</div>}  
+            { this.props.gamePage.die ? <LosePopup score={this.props.gamePage.score} time={this.props.gamePage.time} /> : 
+                                        <div className = {s.grid}>{fieldItems}</div>}  
             </div>
             
         </div>
@@ -170,6 +181,9 @@ let mapDispatchToProps = (dispatch) => {
         },
         addScore: () => {
             dispatch(addScoreAC());
+        },
+        addTime: () => {
+            dispatch(addTimeAC());
         },
         gameOver: () => {
             dispatch(gameOverAC());

@@ -3,14 +3,13 @@ const SET_FOOD = 'SET_FOOD';
 const SET_HEAD = 'SET_HEAD';
 const SET_TAIL = 'SET_TAIL';
 const ADD_SCORE = 'ADD_SCORE';
+const ADD_TIME = 'ADD_TIME';
 const TOOGLE_IS_FOOD = 'TOOGLE_IS_FOOD';
 const TOOGLE_IS_HEAD = 'TOOGLE_IS_HEAD';
 const TOOGLE_IS_TAIL = 'TOOGLE_IS_TAIL';
 const SET_DIRECTION = 'SET_DIRECTION';
 const CHANGE_HEAD_COORDINATES = 'CHANGE_HEAD_COORDINATES';
 const GAME_OVER = 'GAME_OVER';
-
-
 
 let initialState = {
     rows: 20,
@@ -22,8 +21,9 @@ let initialState = {
         tail: []
     },
     currentDirection: 'right',
-    tickTime: 500,
+    tickTime: 200,
     score: 0,
+    time: 0,
     die: false
 };
 
@@ -88,8 +88,10 @@ const gameReducer = (state = initialState, action) => {
         }) } 
         case ADD_SCORE:
             return { ...state, score: state.score + 1 }
+        case ADD_TIME:
+            return { ...state, time: state.time + 1 }
         case GAME_OVER:
-            return { ...state, die: true }    
+            return { ...state, die: true }        
         case SET_DIRECTION:
             return {
                 ...state, currentDirection: action.direction
@@ -125,6 +127,7 @@ export const toogleIsFoodAC = () => ({type: TOOGLE_IS_FOOD})
 export const toogleIsHeadAC = () => ({type: TOOGLE_IS_HEAD})
 export const toogleIsTailAC = () => ({type: TOOGLE_IS_TAIL})
 export const addScoreAC = () => ({type: ADD_SCORE})
+export const addTimeAC = () => ({type: ADD_TIME})
 export const gameOverAC = () => ({type: GAME_OVER})
 export const setDirectionAC = (direction) => ({type: SET_DIRECTION, direction})
 export const changeHeadCoordinatesAC = () => ({type: CHANGE_HEAD_COORDINATES})
