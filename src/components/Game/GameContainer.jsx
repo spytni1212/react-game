@@ -1,6 +1,7 @@
 import React from 'react';
 import s from './Game.module.css';
 import { connect } from 'react-redux';
+import LosePopup from './LosePopup/LosePopup';
 import { setFieldAC, setFoodAC, toogleIsFoodAC, 
          toogleIsHeadAC, setHeadAC, setDirectionAC,
          setTailAC, changeHeadCoordinatesAC, toogleIsTailAC, addScoreAC, gameOverAC } from '../../redux/game-reducer'
@@ -77,9 +78,6 @@ class GameContainer extends React.Component {
             tailCoordinates.pop()
         }
 
-        
-
-        
         this.props.toogleIsHead();
         this.props.toogleIsTail();
         this.props.setTail(tailCoordinates);    
@@ -91,7 +89,6 @@ class GameContainer extends React.Component {
                 this.props.gameOver();
         }
 
-        
         if (this.props.gamePage.die) {
             clearInterval(window.fnInterval);
         }
@@ -125,10 +122,12 @@ class GameContainer extends React.Component {
                                      key = {fieldItem.row + '-' + fieldItem.col}></div>
         })
         return (
-        <div className = {s.snakeContainer}>
+        <div className = {s.gameContainer}>
             <div>score: {this.props.gamePage.score}</div>
-            { this.props.gamePage.die ? <div className = {s.grid}>вы проиграли</div> : 
-                                        <div className = {s.grid}>{fieldItems}</div>}  
+            <div>
+            { this.props.gamePage.die ? <LosePopup score={this.props.gamePage.score}/> :<div className = {s.grid}>{fieldItems}</div>}  
+            </div>
+            
         </div>
     )
     }

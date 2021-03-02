@@ -1,6 +1,4 @@
-.snakeContainer {
-    width: 100vw;
-    height: 100vh;
+.gameContainer {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -8,37 +6,40 @@
 }
 
 .grid {
-    width: 500px;
-    height: 500px;
+    border: 5px solid rgb(2, 90, 2);
+    width: 460px;
+    height: 460px;
     margin: auto;
     display: flex;
     flex-direction: row;
-    flex-wrap: wrap;
+    flex-wrap: wrap;    
+    background-color: green;
 }
 
 .fieldItem {
-    outline: 1px solid grey;
-    width: 50px;
-    height: 50px;
+    width: 22.5px;
+    height: 22.5px;
 }
 
 .isFood {
-    outline: 1px solid grey;
-    width: 50px;
-    height: 50px;
-    background-color: red;
+    width: 22.5px;
+    height: 22.5px;
+    text-align: center;
+    background-image: url('../../assets/image/apple.svg');
 }
 
 .isHead {
-    outline: 1px solid grey;
-    width: 50px;
-    height: 50px;
-    background-color: black;
+    width: 22.5px;
+    height: 22.5px;
+    text-align: center;
+    background-image: url('../../assets/image/snake-head.svg');
 }
 
 .isTail {
-    outline: 1px solid grey;
-    width: 50px;
-    height: 50px;
-    background-color: yellow;
+    width: 22.5px;
+    height: 22.5px;
+    border: 2px solid yellow;
+    border-radius: 20%;
+    background-color: yellowgreen;
+
 }
