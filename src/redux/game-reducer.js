@@ -2,11 +2,14 @@ const SET_FIELD = 'SET_FIELD';
 const SET_FOOD = 'SET_FOOD';
 const SET_HEAD = 'SET_HEAD';
 const SET_TAIL = 'SET_TAIL';
+const ADD_SCORE = 'ADD_SCORE';
 const TOOGLE_IS_FOOD = 'TOOGLE_IS_FOOD';
 const TOOGLE_IS_HEAD = 'TOOGLE_IS_HEAD';
 const TOOGLE_IS_TAIL = 'TOOGLE_IS_TAIL';
 const SET_DIRECTION = 'SET_DIRECTION';
 const CHANGE_HEAD_COORDINATES = 'CHANGE_HEAD_COORDINATES';
+const GAME_OVER = 'GAME_OVER';
+
 
 
 let initialState = {
@@ -15,11 +18,13 @@ let initialState = {
     field: [],
     food: {},
     snake: {
-        head:{},
+        head: {},
         tail: []
     },
     currentDirection: 'right',
-    tickTime: 500
+    tickTime: 500,
+    score: 0,
+    die: false
 };
 
 
@@ -69,7 +74,7 @@ const gameReducer = (state = initialState, action) => {
         case TOOGLE_IS_TAIL:
         return { ...state,
                 field: state.field.map(fieldItem => {
-                   if (state.snake.tail.find(tailItem => tailItem.col === fieldItem.col && tailItem.col === fieldItem.col)) {
+                   if (state.snake.tail.find(tailItem => tailItem.col === fieldItem.col && tailItem.row === fieldItem.row)) {
                            return {
                                ...fieldItem,
                                isTail: true
@@ -81,6 +86,10 @@ const gameReducer = (state = initialState, action) => {
                             }
                        }
         }) } 
+        case ADD_SCORE:
+            return { ...state, score: state.score + 1 }
+        case GAME_OVER:
+            return { ...state, die: true }    
         case SET_DIRECTION:
             return {
                 ...state, currentDirection: action.direction
@@ -115,7 +124,10 @@ export const setTailAC = (tailCoordinates) => ({type: SET_TAIL, tailCoordinates}
 export const toogleIsFoodAC = () => ({type: TOOGLE_IS_FOOD})
 export const toogleIsHeadAC = () => ({type: TOOGLE_IS_HEAD})
 export const toogleIsTailAC = () => ({type: TOOGLE_IS_TAIL})
+export const addScoreAC = () => ({type: ADD_SCORE})
+export const gameOverAC = () => ({type: GAME_OVER})
 export const setDirectionAC = (direction) => ({type: SET_DIRECTION, direction})
 export const changeHeadCoordinatesAC = () => ({type: CHANGE_HEAD_COORDINATES})
+
 
 export default gameReducer;

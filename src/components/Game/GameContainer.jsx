@@ -3,7 +3,7 @@ import s from './Game.module.css';
 import { connect } from 'react-redux';
 import { setFieldAC, setFoodAC, toogleIsFoodAC, 
          toogleIsHeadAC, setHeadAC, setDirectionAC,
-         setTailAC, changeHeadCoordinatesAC, toogleIsTailAC } from '../../redux/game-reducer'
+         setTailAC, changeHeadCoordinatesAC, toogleIsTailAC, addScoreAC, gameOverAC } from '../../redux/game-reducer'
 
 
 class GameContainer extends React.Component {
@@ -26,24 +26,6 @@ class GameContainer extends React.Component {
         this.props.setField(field)
         this.handleKeyPress = this.handleKeyPress.bind(this)
     }
-
-    // handleKeyPress(e) {
-    //   switch (e.keyCode) {
-    //       case 37:
-    //         this.props.setDirection('left');
-    //         break;
-    //   case 38:
-    //         this.props.setDirection('up');
-    //         break;
-    //   case 39:
-    //       default:
-    //         this.props.setDirection('right');
-    //         break;
-    //   case 40:
-    //         this.props.setDirection('down');
-    //         break;
-    //     }
-    // }
 
     handleKeyPress(e) {
         if (e.keyCode === 37 && this.props.gamePage.currentDirection !== 'right') {
@@ -73,23 +55,46 @@ class GameContainer extends React.Component {
     
     gameTick() {
         this.props.changeHeadCoordinates();
-        let tailCoordinates = this.props.gamePage.snake.tail
+        let snake = this.props.gamePage.snake;
+        let tailCoordinates = this.props.gamePage.snake.tail;
+
+        if (snake.tail.find(tailItem => tailItem.col === snake.head.col &&
+            tailItem.row === snake.head.row)) {
+                this.props.gameOver();
+            }   
         
         tailCoordinates.unshift({
-            col: this.props.gamePage.snake.head.col,
-            row: this.props.gamePage.snake.head.row
+            col: snake.head.col,
+            row: snake.head.row
         })
         
-        if (this.props.gamePage.snake.head.col === this.props.gamePage.food.col &&
-            this.props.gamePage.snake.head.row === this.props.gamePage.food.row) {
+        if (snake.head.col === this.props.gamePage.food.col &&
+            snake.head.row === this.props.gamePage.food.row) {
                 this.props.setFood(this.getRandomCoordinates())
                 this.props.toogleIsFood();
+                this.props.addScore();
         } else {
             tailCoordinates.pop()
         }
+
+        
+
+        
         this.props.toogleIsHead();
         this.props.toogleIsTail();
         this.props.setTail(tailCoordinates);    
+
+        if (snake.head.row < 0 ||
+            snake.head.row >= this.props.gamePage.rows ||
+            snake.head.col < 0 ||
+            snake.head.col >= this.props.gamePage.cols) {
+                this.props.gameOver();
+        }
+
+        
+        if (this.props.gamePage.die) {
+            clearInterval(window.fnInterval);
+        }
     }
 
     componentWillUnmount() {
@@ -121,10 +126,9 @@ class GameContainer extends React.Component {
         })
         return (
         <div className = {s.snakeContainer}>
-            <div className = {s.grid}>
-                {fieldItems}
-            </div>
-            
+            <div>score: {this.props.gamePage.score}</div>
+            { this.props.gamePage.die ? <div className = {s.grid}>вы проиграли</div> : 
+                                        <div className = {s.grid}>{fieldItems}</div>}  
         </div>
     )
     }
@@ -164,6 +168,12 @@ let mapDispatchToProps = (dispatch) => {
         },
         changeHeadCoordinates: () => {
             dispatch(changeHeadCoordinatesAC());
+        },
+        addScore: () => {
+            dispatch(addScoreAC());
+        },
+        gameOver: () => {
+            dispatch(gameOverAC());
         },
     }
 }
