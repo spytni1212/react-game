@@ -23,3 +23,22 @@
 .score {
     color: rgb(233, 221, 221);
 }
+
+.button {
+    width: 300px;
+    height: 40px;
+    border: 2px solid black;
+    border-radius: 10px;
+    background-color: rgb(31, 128, 12);
+    cursor: pointer;
+}
+
+.button:hover {
+    background-color: rgb(12, 158, 56);
+}
+
+.buttonText {
+    font-family: 'Press Start 2P', cursive;
+    color: rgb(199, 209, 200);
+}
+

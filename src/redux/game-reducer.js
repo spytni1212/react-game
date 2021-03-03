@@ -21,7 +21,7 @@ let initialState = {
         tail: []
     },
     currentDirection: 'right',
-    tickTime: 200,
+    tickTime: 150,
     score: 0,
     time: 0,
     die: false

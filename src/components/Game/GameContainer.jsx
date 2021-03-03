@@ -1,8 +1,10 @@
 import React from 'react';
 import s from './Game.module.css';
 import { connect } from 'react-redux';
+import ReactHowler from 'react-howler';
 import LosePopup from './LosePopup/LosePopup';
 import Progress from './Progress/Progress';
+import SoundButtons from './SoundButtons/SoundButtons';
 import { setFieldAC, setFoodAC, toogleIsFoodAC, 
          toogleIsHeadAC, setHeadAC, setDirectionAC,
          setTailAC, changeHeadCoordinatesAC, toogleIsTailAC, addScoreAC, gameOverAC, addTimeAC } from '../../redux/game-reducer'
@@ -122,7 +124,10 @@ class GameContainer extends React.Component {
         this.props.addTime();
     }
 
+
+
     render() {
+        
         const fieldItems = this.props.gamePage.field.map(fieldItem => {
             return <div className = {fieldItem.isHead 
                                      ? s.isHead : fieldItem.isTail 
@@ -131,14 +136,16 @@ class GameContainer extends React.Component {
                                      key = {fieldItem.row + '-' + fieldItem.col}></div>
         })
         return (
+            
         <div className = {s.gameContainer}>
             { this.props.gamePage.die ? <></> : <Progress score={this.props.gamePage.score} time={this.props.gamePage.time}/>}
-            
+            { this.props.gamePage.die ? <></> :<SoundButtons />}
+            <ReactHowler src='../../assets/sounds/music.mp3'
+            playing={this.props.sound.backgroundMusic} />
             <div>
             { this.props.gamePage.die ? <LosePopup score={this.props.gamePage.score} time={this.props.gamePage.time} /> : 
                                         <div className = {s.grid}>{fieldItems}</div>}  
-            </div>
-            
+            </div>            
         </div>
     )
     }
@@ -146,7 +153,8 @@ class GameContainer extends React.Component {
 
 let mapStateToProps = (state) => {
     return {
-        gamePage: state.gamePage
+        gamePage: state.gamePage,
+        sound: state.sound
     }
 }
 

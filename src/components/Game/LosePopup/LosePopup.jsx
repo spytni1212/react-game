@@ -14,7 +14,7 @@ const LosePopup = (props) => {
             <span className = {s.scoreContainer}>Your score: <span className = {s.score}>{props.score}</span></span>
             <span className = {s.scoreContainer}>Your time: <span className = {s.score}>{props.time} sec</span></span>
             <div>
-                <button type='button' onClick={startGameClickHandler}>new game</button>
+                <button className = {s.button} type='button' onClick={startGameClickHandler}><span className={s.buttonText}>new game</span></button>
             </div>
             
         </div>

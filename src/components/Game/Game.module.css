@@ -3,6 +3,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    flex-grow: 1;
 }
 
 .grid {
@@ -14,6 +15,12 @@
     flex-direction: row;
     flex-wrap: wrap;    
     background-color: green;
+}
+
+.scoreData {
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .fieldItem {
