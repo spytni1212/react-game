@@ -1,0 +1,26 @@
+.footer {
+    width: 100%;
+    height: 50px;
+    position: absolute;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+    column-gap: 30px;
+}
+
+.github {
+    height: 40px;
+    width: 40px;
+    background-image: url('../../assets/image/github.svg');
+    background-repeat: no-repeat;
+}
+
+.rsschool {
+    
+    height: 50px;
+    width: 90px;
+    background-image: url('../../assets/image/rs_school_js.svg');
+    background-repeat: no-repeat;
+}

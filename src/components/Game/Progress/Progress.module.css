@@ -1,0 +1,14 @@
+.progressContainer {
+    display: flex;
+    column-gap: 30px;
+}
+
+.score, .time {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 1rem;
+    color: rgb(29, 61, 29);
+}
+
+.scoreData, .timeData {
+    color: white;
+}
